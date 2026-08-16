@@ -28,11 +28,11 @@ npm run dev
 
 ## デプロイ（Vercel）
 
-1. [Vercel](https://vercel.com) に GitHub アカウントでログイン
-2. 「Add New Project」→ `miyuc75-creator/warikan-app` をインポート
-3. フレームワークは Next.js を自動検出 → Deploy
+**公開 URL:** https://warikan-app-liart.vercel.app
 
-または CLI:
+GitHub リポジトリと Vercel が連携済みです。`main` ブランチへの push で自動デプロイされます。
+
+手動デプロイ:
 
 ```bash
 npx vercel --prod
