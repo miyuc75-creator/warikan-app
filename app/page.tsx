@@ -18,6 +18,7 @@ import {
   saveHistory,
 } from "@/lib/storage";
 import type { HistoryItem, SplitResult } from "@/lib/types";
+import { playRegisterSound } from "@/lib/sound";
 import { validateSplitInput } from "@/lib/validation";
 
 function historyToForm(item: HistoryItem): FormState {
@@ -68,6 +69,7 @@ export default function Home() {
     const calculated = calculateSplit(input);
     setResult(calculated);
     setError(null);
+    playRegisterSound();
   };
 
   const handleSave = () => {
@@ -122,10 +124,11 @@ export default function Home() {
   const totalAmount = Number(form.totalAmount) || 0;
 
   return (
-    <div className="min-h-full bg-amber-50 px-4 py-8">
+    <div className="min-h-full bg-gradient-to-b from-amber-100 via-amber-50 to-orange-100 px-4 py-8">
       <div className="mx-auto max-w-md space-y-8">
         <header className="text-center">
-          <h1 className="text-3xl font-bold text-red-800">割り勘計算</h1>
+          <p className="text-4xl">💰</p>
+          <h1 className="mt-2 text-3xl font-bold text-red-800">割り勘計算</h1>
           <p className="mt-2 text-stone-600">会計時にすぐ使える割り勘アプリ</p>
         </header>
 
