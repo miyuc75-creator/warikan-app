@@ -1,6 +1,7 @@
 "use client";
 
 import type { HistoryItem } from "@/lib/types";
+import { WoodPanel } from "@/components/IzakayaDecor";
 
 interface HistoryListProps {
   items: HistoryItem[];
@@ -39,46 +40,68 @@ export function HistoryList({
 }: HistoryListProps) {
   if (items.length === 0) {
     return (
-      <section className="rounded-2xl bg-white p-6 shadow-lg">
-        <h2 className="mb-4 text-xl font-bold text-red-800">過去の割り勘</h2>
-        <p className="text-center text-stone-500">履歴はまだありません</p>
-      </section>
+      <WoodPanel>
+        <h2 className="mb-1 text-center font-serif text-xl font-bold tracking-widest text-amber-100">
+          過去の割り勘
+        </h2>
+        <p className="mb-4 text-center text-xs text-amber-200/60">
+          帳簿
+        </p>
+        <div className="paper-card rounded-lg p-6 text-center">
+          <p className="font-serif text-stone-500">履歴はまだありません</p>
+          <p className="mt-2 text-xs text-stone-400">
+            計算結果を保存するとここに表示されます
+          </p>
+        </div>
+      </WoodPanel>
     );
   }
 
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-lg">
+    <WoodPanel>
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-bold text-red-800">過去の割り勘</h2>
+        <div>
+          <h2 className="font-serif text-xl font-bold tracking-widest text-amber-100">
+            過去の割り勘
+          </h2>
+          <p className="text-xs text-amber-200/60">帳簿</p>
+        </div>
         <button
           type="button"
           onClick={onClearAll}
-          className="text-sm font-medium text-stone-500 underline hover:text-red-600"
+          className="text-xs font-medium text-amber-200/70 underline hover:text-red-300"
         >
           全削除
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-3">
         {items.map((item) => (
           <article
             key={item.id}
-            className="rounded-xl border border-stone-200 bg-amber-50/50 p-4"
+            className="ledger-card rounded-lg p-4 shadow-sm"
           >
-            <div className="mb-2">
-              <h3 className="text-lg font-bold text-stone-800">
-                {item.title || "（タイトルなし）"}
-              </h3>
-              <p className="text-sm text-stone-500">{formatDate(item.savedAt)}</p>
+            <div className="mb-2 flex items-start justify-between">
+              <div>
+                <h3 className="font-serif text-lg font-bold text-stone-800">
+                  {item.title || "（タイトルなし）"}
+                </h3>
+                <p className="text-xs text-stone-500">
+                  {formatDate(item.savedAt)}
+                </p>
+              </div>
+              <span className="rounded bg-red-800/10 px-2 py-0.5 font-serif text-xs font-bold text-red-800">
+                伝票
+              </span>
             </div>
 
-            <p className="mb-2 text-stone-700">
+            <p className="mb-2 text-sm text-stone-600">
               合計 {formatYen(item.totalAmount)}円 / {item.participantCount}人
             </p>
 
-            <div className="mb-4 space-y-1">
+            <div className="mb-4 space-y-0.5 border-l-2 border-amber-700/30 pl-3">
               {formatBreakdown(item).map((line) => (
-                <p key={line} className="font-semibold text-stone-800">
+                <p key={line} className="font-serif font-semibold text-stone-800">
                   {line}
                 </p>
               ))}
@@ -88,14 +111,14 @@ export function HistoryList({
               <button
                 type="button"
                 onClick={() => onReuse(item)}
-                className="flex-1 rounded-lg bg-red-600 px-4 py-2 font-semibold text-white transition hover:bg-red-700"
+                className="btn-noren flex-1 rounded-lg px-3 py-2 text-sm font-bold text-amber-50"
               >
                 この設定で再計算
               </button>
               <button
                 type="button"
                 onClick={() => onDelete(item.id)}
-                className="rounded-lg border border-stone-300 px-4 py-2 font-semibold text-stone-600 transition hover:bg-stone-100"
+                className="rounded-lg border-2 border-stone-300 bg-stone-100 px-3 py-2 text-sm font-semibold text-stone-600 transition hover:bg-stone-200"
               >
                 削除
               </button>
@@ -103,6 +126,6 @@ export function HistoryList({
           </article>
         ))}
       </div>
-    </section>
+    </WoodPanel>
   );
 }

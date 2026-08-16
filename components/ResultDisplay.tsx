@@ -27,8 +27,10 @@ export function ResultDisplay({
 }: ResultDisplayProps) {
   if (error) {
     return (
-      <section className="rounded-2xl border-2 border-red-300 bg-red-50 p-6">
-        <p className="text-center font-semibold text-red-700">{error}</p>
+      <section className="receipt-card rounded-lg p-6 pt-8">
+        <p className="text-center font-serif text-lg font-bold text-red-700">
+          ⚠️ {error}
+        </p>
       </section>
     );
   }
@@ -38,57 +40,66 @@ export function ResultDisplay({
   }
 
   return (
-    <section className="rounded-2xl bg-white p-6 shadow-lg">
-      <h2 className="mb-4 text-center text-xl font-bold text-red-800">
-        計算結果
+    <section className="receipt-card rounded-lg p-6 pt-8">
+      <h2 className="mb-1 text-center font-serif text-xl font-black tracking-widest text-stone-800">
+        お 会 計 票
       </h2>
+      <p className="mb-5 text-center text-xs tracking-wider text-stone-500">
+        ━━━━━━━━━━━━━━━
+      </p>
 
-      <div className="space-y-3 rounded-xl bg-amber-50 p-5">
+      <div className="space-y-3 border-y border-dashed border-stone-300 py-5">
         {result.breakdown.map((item, index) => (
-          <p
+          <div
             key={`${item.count}-${item.amountPerPerson}-${index}`}
-            className="text-center text-2xl font-bold text-stone-800"
+            className="flex items-baseline justify-between px-2"
           >
-            {item.count}人 × {formatYen(item.amountPerPerson)}円
-          </p>
+            <span className="font-serif text-lg text-stone-600">
+              {item.count}人 ×
+            </span>
+            <span className="font-serif text-3xl font-black text-red-800">
+              {formatYen(item.amountPerPerson)}
+              <span className="ml-1 text-lg">円</span>
+            </span>
+          </div>
         ))}
       </div>
 
       <div className="mt-4 space-y-1 text-center">
-        <p className="text-lg text-stone-600">
-          合計：{formatYen(result.totalVerified)}円
+        <p className="font-serif text-2xl font-black text-stone-800">
+          合計 {formatYen(result.totalVerified)}円
         </p>
         {result.totalVerified === totalAmount ? (
-          <p className="text-sm font-medium text-green-600">
-            元の会計金額（{formatYen(totalAmount)}円）と一致しています
+          <p className="text-sm font-medium text-green-700">
+            ✓ 元の会計金額（{formatYen(totalAmount)}円）と一致
           </p>
         ) : (
-          <p className="text-sm font-medium text-amber-600">
+          <p className="text-sm font-medium text-amber-700">
             元の会計金額：{formatYen(totalAmount)}円
           </p>
         )}
       </div>
 
-      <div className="mt-6 space-y-3 border-t border-stone-200 pt-6">
+      <div className="mt-6 space-y-3 border-t border-dashed border-stone-300 pt-6">
         <div>
-          <label className="mb-2 block text-sm font-semibold text-stone-700">
-            タイトル（履歴用）
+          <label className="mb-2 block font-serif text-sm font-bold text-stone-700">
+            履歴タイトル
           </label>
           <input
             type="text"
             placeholder="会社飲み会"
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
-            className="w-full rounded-xl border-2 border-stone-200 px-4 py-3 text-lg focus:border-red-400 focus:outline-none"
+            className="izakaya-input w-full rounded-lg px-4 py-3 text-lg"
           />
         </div>
         <button
           type="button"
           onClick={onSave}
           disabled={!canSave}
-          className="w-full rounded-xl bg-amber-600 px-6 py-3 font-bold text-white transition hover:bg-amber-700 disabled:cursor-not-allowed disabled:opacity-50"
+          className="btn-gold w-full rounded-lg px-6 py-3 font-serif font-bold tracking-wider text-stone-900 transition active:translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          履歴に保存
+          📋 履歴に保存
         </button>
       </div>
     </section>

@@ -1,24 +1,197 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fffbeb;
-  --foreground: #292524;
-  --card: #ffffff;
-  --accent: #b91c1c;
-  --accent-light: #fef2f2;
+  --wood-dark: #1a0f0a;
+  --wood-medium: #3d2314;
+  --wood-light: #5c3a21;
+  --paper: #faf3e8;
+  --paper-shadow: #e8dcc8;
+  --lantern-red: #c41e3a;
+  --noren-red: #7f1d1d;
+  --accent-gold: #d4a017;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-background: var(--wood-dark);
+  --color-foreground: #faf3e8;
   --font-sans: var(--font-geist-sans);
+  --font-serif: var(--font-noto-serif);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--wood-dark);
+  color: #faf3e8;
   font-family: var(--font-geist-sans), "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+
+/* 居酒屋背景：暗い木の店内 */
+.izakaya-bg {
+  background-color: #1a0f0a;
+  background-image:
+    radial-gradient(ellipse at 50% 0%, rgba(255, 120, 50, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(255, 80, 30, 0.06) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 80%, rgba(255, 80, 30, 0.06) 0%, transparent 40%),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 80px,
+      rgba(0, 0, 0, 0.15) 80px,
+      rgba(0, 0, 0, 0.15) 82px
+    ),
+    linear-gradient(180deg, #2c1810 0%, #1a0f0a 40%, #0f0906 100%);
+  min-height: 100%;
+}
+
+/* 木の看板パネル */
+.wood-panel {
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    linear-gradient(180deg, #8b6914 0%, #6b4423 30%, #5c3a21 70%, #4a2f1a 100%);
+  border: 3px solid #3d2314;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+/* 和紙カード */
+.paper-card {
+  background:
+    linear-gradient(to bottom, #faf3e8 0%, #f5ebd9 100%);
+  border: 1px solid #d4c4a8;
+  box-shadow:
+    0 2px 0 #c4b498,
+    0 8px 24px rgba(0, 0, 0, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  color: #292524;
+}
+
+/* のれん */
+.noren-banner {
+  background: linear-gradient(180deg, #991b1b 0%, #7f1d1d 60%, #6b1515 100%);
+  border-bottom: none;
+}
+
+.noren-fringe {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      #7f1d1d 0px,
+      #7f1d1d 8px,
+      transparent 8px,
+      transparent 16px
+    );
+  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+}
+
+/* 提灯の光 */
+.lantern-glow {
+  filter: drop-shadow(0 0 8px rgba(255, 120, 50, 0.6));
+  animation: lantern-flicker 4s ease-in-out infinite;
+}
+
+@keyframes lantern-flicker {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 120, 50, 0.6)); }
+  50% { filter: drop-shadow(0 0 14px rgba(255, 160, 80, 0.8)); }
+}
+
+/* お会計票スタイル */
+.receipt-card {
+  background: #fffef5;
+  border: 2px dashed #c4b498;
+  position: relative;
+}
+
+.receipt-card::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 12px;
+  background: #d4c4a8;
+  border-radius: 0 0 4px 4px;
+}
+
+/* 履歴：古い帳簿風 */
+.ledger-card {
+  background: linear-gradient(to bottom, #f8f0e0, #f0e8d4);
+  border-left: 4px solid #8b6914;
+  border-bottom: 1px solid #d4c4a8;
+}
+
+/* 入力欄：居酒屋メニュー風 */
+.izakaya-input {
+  background: #fffef8;
+  border: 2px solid #c4a882;
+  color: #1c1917;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.06);
+}
+
+.izakaya-input:focus {
+  border-color: #b91c1c;
+  outline: none;
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.06),
+    0 0 0 3px rgba(185, 28, 28, 0.15);
+}
+
+/* ラジオ選択：メニュー札風 */
+.menu-tag {
+  background: #fffef8;
+  border: 2px solid #d4c4a8;
+  color: #44403c;
+  transition: all 0.15s ease;
+}
+
+.menu-tag:has(:checked) {
+  background: #fef2f2;
+  border-color: #b91c1c;
+  box-shadow: 0 0 0 1px #b91c1c, inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* ボタン：赤暖簾ボタン */
+.btn-noren {
+  background: linear-gradient(180deg, #dc2626 0%, #b91c1c 50%, #991b1b 100%);
+  border: 2px solid #7f1d1d;
+  box-shadow:
+    0 4px 0 #6b1515,
+    0 6px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s ease;
+}
+
+.btn-noren:hover {
+  background: linear-gradient(180deg, #ef4444 0%, #dc2626 50%, #b91c1c 100%);
+}
+
+.btn-noren:active {
+  transform: translateY(2px);
+  box-shadow:
+    0 2px 0 #6b1515,
+    0 3px 6px rgba(0, 0, 0, 0.3);
+}
+
+.btn-wood {
+  background: linear-gradient(180deg, #a08060 0%, #806040 100%);
+  border: 2px solid #5c3a21;
+  color: #faf3e8;
+  box-shadow: 0 3px 0 #3d2314;
+}
+
+.btn-wood:hover {
+  background: linear-gradient(180deg, #b09070 0%, #907050 100%);
+}
+
+.btn-gold {
+  background: linear-gradient(180deg, #d4a017 0%, #b8860b 50%, #9a7209 100%);
+  border: 2px solid #7a5a07;
+  box-shadow: 0 4px 0 #6b4f06;
+}
+
+.btn-gold:hover {
+  background: linear-gradient(180deg, #e8b422 0%, #d4a017 50%, #b8860b 100%);
 }
 
 input[type="number"]::-webkit-inner-spin-button,

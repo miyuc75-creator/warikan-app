@@ -7,6 +7,7 @@ import {
   type FormState,
 } from "@/components/CalculatorForm";
 import { HistoryList } from "@/components/HistoryList";
+import { NorenHeader, SectionDivider } from "@/components/IzakayaDecor";
 import { ResultDisplay } from "@/components/ResultDisplay";
 import { calculateSplit } from "@/lib/calculate";
 import { formToSplitInput } from "@/lib/formUtils";
@@ -124,13 +125,13 @@ export default function Home() {
   const totalAmount = Number(form.totalAmount) || 0;
 
   return (
-    <div className="min-h-full bg-gradient-to-b from-amber-100 via-amber-50 to-orange-100 px-4 py-8">
-      <div className="mx-auto max-w-md space-y-8">
-        <header className="text-center">
-          <p className="text-4xl">💰</p>
-          <h1 className="mt-2 text-3xl font-bold text-red-800">割り勘計算</h1>
-          <p className="mt-2 text-stone-600">会計時にすぐ使える割り勘アプリ</p>
-        </header>
+    <div className="izakaya-bg min-h-full px-4 py-8 pb-16">
+      <div className="mx-auto max-w-md space-y-6">
+        <NorenHeader />
+
+        <p className="text-center font-serif text-sm tracking-widest text-amber-200/60">
+          ── お会計のお手伝い ──
+        </p>
 
         <CalculatorForm
           form={form}
@@ -139,22 +140,34 @@ export default function Home() {
           onReset={handleReset}
         />
 
-        <ResultDisplay
-          result={result}
-          totalAmount={totalAmount}
-          error={error}
-          title={title}
-          onTitleChange={setTitle}
-          onSave={handleSave}
-          canSave={!!result && !error}
-        />
+        {(result || error) && (
+          <>
+            <SectionDivider label="お会計" />
+            <ResultDisplay
+              result={result}
+              totalAmount={totalAmount}
+              error={error}
+              title={title}
+              onTitleChange={setTitle}
+              onSave={handleSave}
+              canSave={!!result && !error}
+            />
+          </>
+        )}
 
+        <SectionDivider label="履歴帳" />
         <HistoryList
           items={history}
           onReuse={handleReuse}
           onDelete={handleDelete}
           onClearAll={handleClearAll}
         />
+
+        <footer className="pt-4 text-center">
+          <p className="font-serif text-xs tracking-widest text-amber-200/30">
+            ご利用ありがとうございました
+          </p>
+        </footer>
       </div>
     </div>
   );
