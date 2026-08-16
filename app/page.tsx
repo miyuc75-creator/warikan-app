@@ -1,22 +1,52 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   CalculatorForm,
   defaultFormState,
   type FormState,
 } from "@/components/CalculatorForm";
+import { HistoryList } from "@/components/HistoryList";
 import { ResultDisplay } from "@/components/ResultDisplay";
 import { calculateSplit } from "@/lib/calculate";
 import { formToSplitInput } from "@/lib/formUtils";
-import type { SplitResult } from "@/lib/types";
+import {
+  clearAllHistory,
+  createHistoryItem,
+  deleteHistoryItem,
+  loadHistory,
+  saveHistory,
+} from "@/lib/storage";
+import type { HistoryItem, SplitResult } from "@/lib/types";
 import { validateSplitInput } from "@/lib/validation";
+
+function historyToForm(item: HistoryItem): FormState {
+  return {
+    totalAmount: String(item.totalAmount),
+    participantCount: String(item.participantCount),
+    mode: item.mode,
+    specifiedCount:
+      item.mode === "partial" && item.specifiedCount != null
+        ? String(item.specifiedCount)
+        : "",
+    specifiedAmount:
+      item.mode === "partial" && item.specifiedAmount != null
+        ? String(item.specifiedAmount)
+        : "",
+    roundingUnit: item.roundingUnit,
+  };
+}
 
 export default function Home() {
   const [form, setForm] = useState<FormState>(defaultFormState);
   const [result, setResult] = useState<SplitResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState("");
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+
+  useEffect(() => {
+    setHistory(loadHistory());
+  }, []);
 
   const handleReset = () => {
     setForm(defaultFormState);
@@ -38,6 +68,55 @@ export default function Home() {
     const calculated = calculateSplit(input);
     setResult(calculated);
     setError(null);
+  };
+
+  const handleSave = () => {
+    if (!result) return;
+
+    const input = formToSplitInput(form);
+    const remainingCount =
+      input.mode === "partial"
+        ? input.participantCount - (input.specifiedCount ?? 0)
+        : undefined;
+    const remainingBreakdown = input.mode === "partial"
+      ? result.breakdown.find(
+          (b) => b.amountPerPerson !== (input.specifiedAmount ?? 0)
+        )
+      : undefined;
+
+    const item = createHistoryItem({
+      title: title.trim() || "（タイトルなし）",
+      totalAmount: input.totalAmount,
+      participantCount: input.participantCount,
+      mode: input.mode,
+      specifiedCount: input.specifiedCount,
+      specifiedAmount: input.specifiedAmount,
+      remainingCount,
+      remainingAmount: remainingBreakdown?.amountPerPerson,
+      roundingUnit: input.roundingUnit,
+      result,
+    });
+
+    setHistory(saveHistory(item));
+    setTitle("");
+  };
+
+  const handleReuse = (item: HistoryItem) => {
+    setForm(historyToForm(item));
+    setTitle(item.title === "（タイトルなし）" ? "" : item.title);
+    setResult(null);
+    setError(null);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleDelete = (id: string) => {
+    setHistory(deleteHistoryItem(id));
+  };
+
+  const handleClearAll = () => {
+    if (window.confirm("すべての履歴を削除しますか？")) {
+      setHistory(clearAllHistory());
+    }
   };
 
   const totalAmount = Number(form.totalAmount) || 0;
@@ -63,8 +142,15 @@ export default function Home() {
           error={error}
           title={title}
           onTitleChange={setTitle}
-          onSave={() => {}}
-          canSave={false}
+          onSave={handleSave}
+          canSave={!!result && !error}
+        />
+
+        <HistoryList
+          items={history}
+          onReuse={handleReuse}
+          onDelete={handleDelete}
+          onClearAll={handleClearAll}
         />
       </div>
     </div>
